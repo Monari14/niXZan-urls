@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>niXZan</title>
+</head>
+<body>
+    <div>
+        <h1>niXZan URLs</h1>
+        <div style="display: flex; gap: 5px;">
+            <input id="urlInput" type="text" placeholder="Ex.: https://example.com" style="height: 40px;">
+            <button onclick="encurtarUrl()" style="height: 40px;">Encurtar</button>
+        </div>
+    
+      
+      
+        <div id="resultadoURL" class="hidden">
+            <p>URL encurtada:</p>
+            <div style="display:flex;">
+                <input id="shortUrl" readonly>
+                <button onclick="copiarUrl()">Copiar</button>
+            </div>
+            <div id="qrCodeContainer">
+                <p>QR Code:</p>
+                <img id="qrCode" src="" alt="QR Code">
+            </div>
+        </div>
+    </div>
+
+    <script>
+    async function encurtarUrl() {
+        console.log("Função encurtarUrl chamada");
+        const urlInput = document.getElementById('urlInput').value;
+        if (!urlInput) {
+            alert('Por favor, insira uma URL válida.');
+            return;
+        }
+    
+        const response = await fetch('/urls', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: { original: urlInput } })
+        });
+    
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+    
+            const shortUrl = window.location.origin + '/' + data.shortened;
+        
+            document.getElementById('shortUrl').value = shortUrl;
+            document.getElementById('qrCode').src = data.qr_code;
+    
+            console.log("shortUrl: ", shortUrl);
+            console.log("QR Code src: ", data.qr_code);
+    
+            document.getElementById('resultadoURL').classList.remove('hidden');
+        } else {
+            alert('Erro ao encurtar a URL.');
+        }
+    }
+    
+    function copiarUrl() {
+        const shortUrl = document.getElementById('shortUrl');
+        shortUrl.select();
+        document.execCommand('copy');
+        alert('URL copiada!');
+    }
+    </script>
+</body> 
+</html>
