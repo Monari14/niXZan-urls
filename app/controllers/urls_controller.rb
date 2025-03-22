@@ -4,18 +4,32 @@ class UrlsController < ApplicationController
     # Recebe a URL original do corpo da requisição
     original_url = params[:url][:original]
 
+    # Adiciona "https://" se a URL não começar com "http://" ou "https://"
+    unless original_url.match(/^https?:\/\//)
+      original_url = "https://#{original_url}"
+    end
+
+    # Verifica se a URL começa com http:// e substitui por https://
+    original_url = original_url.sub(/^http:\/\//, 'https://')
+
     # Verifica se a URL já existe no banco de dados
     url = Url.find_by(original: original_url)
 
     if url
-      # Se já existir, retorna a URL encurtada existente
-      render json: { shortened: url.shortened }, status: :ok
+      # Se já existir, retorna a URL encurtada e o QR Code
+      render json: { shortened: url.shortened, qr_code: generate_qr_code(url.shortened) }, status: :ok
     else
       # Se não existir, cria uma nova URL encurtada
       url = Url.create(original: original_url)
 
       if url.save
-        render json: { shortened: url.shortened }, status: :created
+        # Gerar o QR Code para a URL encurtada
+        qr_code = generate_qr_code(url.shortened)
+        
+        # Adicionando um log para verificar os dados
+        Rails.logger.debug "Shortened URL: #{url.shortened}, QR Code: #{qr_code}"
+
+        render json: { shortened: url.shortened, qr_code: qr_code }, status: :created
       else
         render json: { error: "URL não pôde ser criada" }, status: :unprocessable_entity
       end
@@ -34,5 +48,15 @@ class UrlsController < ApplicationController
       # Se a URL não for encontrada, retorna um erro
       render json: { error: "URL não encontrada" }, status: 404
     end
+  end
+
+  private
+
+  # Método para gerar o QR Code para a URL encurtada
+  def generate_qr_code(shortened_url)
+    qr = RQRCode::QRCode.new(shortened_url)
+
+    # Gera a imagem do QR Code em formato PNG e retorna como URL de dados
+    qr.as_png(size: 300).to_data_url
   end
 end

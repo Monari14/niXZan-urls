@@ -3,52 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encurtador de URL</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>niXZan</title>
 </head>
 <body class="bg-gray-100 flex justify-center items-center h-screen">
     <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full text-center">
-        <h1 class="text-2xl font-bold mb-4">Encurtador de URL</h1>
-        <input id="urlInput" type="text" placeholder="Cole sua URL aqui" class="w-full p-2 border rounded-md mb-4">
+        <h1 class="text-2xl font-bold mb-4">niXZan URLs</h1>
+        <input id="urlInput" type="text" placeholder="Ex.: https://example.com" class="w-full p-2 border rounded-md mb-4">
+
         <button onclick="encurtarUrl()" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">Encurtar</button>
+
         <div id="resultado" class="mt-4 hidden">
             <p class="text-gray-700">URL encurtada:</p>
             <div class="flex items-center justify-between bg-gray-200 p-2 rounded-md">
                 <input id="shortUrl" class="bg-transparent border-none w-full text-blue-500 font-semibold" readonly>
+
                 <button onclick="copiarUrl()" class="text-blue-500 font-bold ml-2">Copiar</button>
+
+            </div>
+            <div id="qrCodeContainer" class="mt-4">
+                <p class="text-gray-700">QR Code:</p>
+                <img id="qrCode" src="" alt="QR Code" class="mx-auto mt-2">
             </div>
         </div>
     </div>
 
     <script>
-        async function encurtarUrl() {
-            const urlInput = document.getElementById('urlInput').value;
-            if (!urlInput) {
-                alert('Por favor, insira uma URL válida.');
-                return;
-            }
-
-            const response = await fetch('/urls', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url: { original: urlInput } })
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                document.getElementById('shortUrl').value = window.location.origin + '/' + data.shortened;
-                document.getElementById('resultado').classList.remove('hidden');
-            } else {
-                alert('Erro ao encurtar a URL.');
-            }
+    async function encurtarUrl() {
+        console.log("Função encurtarUrl chamada");
+        const urlInput = document.getElementById('urlInput').value;
+        if (!urlInput) {
+            alert('Por favor, insira uma URL válida.');
+            return;
         }
-
-        function copiarUrl() {
-            const shortUrl = document.getElementById('shortUrl');
-            shortUrl.select();
-            document.execCommand('copy');
-            alert('URL copiada!');
+    
+        const response = await fetch('/urls', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: { original: urlInput } })
+        });
+    
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data); // Verifique o conteúdo da resposta
+    
+            const shortUrl = window.location.origin + '/' + data.shortened;
+        
+            document.getElementById('shortUrl').value = shortUrl;
+            document.getElementById('qrCode').src = data.qr_code;
+    
+            // Confirme se os campos estão sendo atualizados
+            console.log("shortUrl: ", shortUrl);
+            console.log("QR Code src: ", data.qr_code);
+    
+            document.getElementById('resultado').classList.remove('hidden');
+        } else {
+            alert('Erro ao encurtar a URL.');
         }
+    }
+    
+    function copiarUrl() {
+        const shortUrl = document.getElementById('shortUrl');
+        shortUrl.select();
+        document.execCommand('copy');
+        alert('URL copiada!');
+    }
     </script>
-</body>
+</body> 
 </html>

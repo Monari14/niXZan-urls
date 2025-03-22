@@ -1,0 +1,140 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Cor de fundo e centralização */
+body {
+    background: linear-gradient(135deg, #2d2d2d, #333333);
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #e0e0e0;
+    animation: backgroundAnim 5s ease-in-out infinite;
+}
+
+/* Estilo do container */
+div {
+    background: rgba(45, 45, 45, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 450px;
+    padding: 30px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    transform: scale(0.9);
+    animation: scaleIn 0.7s ease-out forwards;
+}
+
+@keyframes scaleIn {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Título */
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #f0f0f0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    animation: textColor 2s infinite alternate;
+}
+
+@keyframes textColor {
+    0% { color: #4e89e8; }
+    100% { color: #82b1ff; }
+}
+
+/* Estilo do input */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 2px solid #555;
+    border-radius: 8px;
+    outline: none;
+    background-color: #333;
+    color: #e0e0e0;
+    font-size: 1rem;
+    transition: border-color 0.3s ease-in-out;
+}
+
+input:focus {
+    border-color: #82b1ff;
+}
+
+/* Estilo do botão */
+button {
+    width: 100%;
+    padding: 14px;
+    background-color: #4e89e8;
+    color: white;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #3d76d7;
+    transform: scale(1.05);
+}
+
+button:active {
+    transform: scale(1);
+}
+
+/* Estilo do resultado */
+#resultado {
+    margin-top: 20px;
+    display: none;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* Estilo do campo de URL encurtada */
+#shortUrl {
+    border: none;
+    background-color: transparent;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #4e89e8;
+}
+
+/* Estilo do botão de copiar */
+#resultado button {
+    font-size: 1rem;
+    padding: 8px 15px;
+    background-color: #4caf50;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#resultado button:hover {
+    background-color: #45a049;
+}
+
+/* Estilo do QR Code */
+#qrCodeContainer {
+    margin-top: 20px;
+}
+
+#qrCode {
+    max-width: 200px;
+    margin-top: 15px;
+    animation: fadeIn 0.5s ease-out;
+}
