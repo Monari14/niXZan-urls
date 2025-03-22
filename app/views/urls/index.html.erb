@@ -5,24 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>niXZan</title>
 </head>
-<body class="bg-gray-100 flex justify-center items-center h-screen">
-    <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full text-center">
-        <h1 class="text-2xl font-bold mb-4">niXZan URLs</h1>
-        <input id="urlInput" type="text" placeholder="Ex.: https://example.com" class="w-full p-2 border rounded-md mb-4">
-
-        <button onclick="encurtarUrl()" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">Encurtar</button>
-
-        <div id="resultado" class="mt-4 hidden">
-            <p class="text-gray-700">URL encurtada:</p>
-            <div class="flex items-center justify-between bg-gray-200 p-2 rounded-md">
-                <input id="shortUrl" class="bg-transparent border-none w-full text-blue-500 font-semibold" readonly>
-
-                <button onclick="copiarUrl()" class="text-blue-500 font-bold ml-2">Copiar</button>
-
+<body>
+    <div>
+        <h1>niXZan URLs</h1>
+        <div style="display: flex; gap: 5px;">
+            <input id="urlInput" type="text" placeholder="Ex.: https://example.com" style="height: 40px;">
+            <button onclick="encurtarUrl()" style="height: 40px;">Encurtar</button>
+        </div>
+    
+      
+      
+        <div id="resultadoURL" class="hidden">
+            <p>URL encurtada:</p>
+            <div style="display:flex;">
+                <input id="shortUrl" readonly>
+                <button onclick="copiarUrl()">Copiar</button>
             </div>
-            <div id="qrCodeContainer" class="mt-4">
-                <p class="text-gray-700">QR Code:</p>
-                <img id="qrCode" src="" alt="QR Code" class="mx-auto mt-2">
+            <div id="qrCodeContainer">
+                <p>QR Code:</p>
+                <img id="qrCode" src="" alt="QR Code">
             </div>
         </div>
     </div>
@@ -44,18 +45,17 @@
     
         if (response.ok) {
             const data = await response.json();
-            console.log(data); // Verifique o conteúdo da resposta
+            console.log(data);
     
             const shortUrl = window.location.origin + '/' + data.shortened;
         
             document.getElementById('shortUrl').value = shortUrl;
             document.getElementById('qrCode').src = data.qr_code;
     
-            // Confirme se os campos estão sendo atualizados
             console.log("shortUrl: ", shortUrl);
             console.log("QR Code src: ", data.qr_code);
     
-            document.getElementById('resultado').classList.remove('hidden');
+            document.getElementById('resultadoURL').classList.remove('hidden');
         } else {
             alert('Erro ao encurtar a URL.');
         }
